@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/background_first"
+    tools:context=".FirstActivity"
+    >
+
+    <ImageView
+        android:id="@+id/topImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/baseline_person_24"
+        android:layout_marginTop="160dp"/>
+
+    <EditText
+        android:id="@+id/firstNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topImageView"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:hint="Name"
+        android:background="@drawable/background_input"
+        android:padding="8dp"/>
+
+    <EditText
+        android:id="@+id/firstSentenceText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstNameText"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Palindrome"
+        android:background="@drawable/background_input"
+        android:padding="8dp"/>
+
+    <Button
+        android:id="@+id/firstCheckButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstSentenceText"
+        android:layout_marginTop="32dp"
+        android:text="Check"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/background_button"/>
+
+    <Button
+        android:id="@+id/firstNextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstCheckButton"
+        android:layout_marginTop="16dp"
+        android:text="Next"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/background_button"/>
+</RelativeLayout>
