@@ -3,7 +3,9 @@ package com.example.suitmediamobiletest
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import com.example.suitmediamobiletest.FirstActivity.Companion.avatar
 import com.example.suitmediamobiletest.FirstActivity.Companion.selectedName
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 
 
@@ -19,13 +22,14 @@ class ThirdActivity : AppCompatActivity(), UserAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var adapter: UserAdapter
+    private lateinit var emptyStateTextView: TextView
     private var users: MutableList<User> = mutableListOf()
     private var currentPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
-
+        emptyStateTextView = findViewById(R.id.emptyStateTextView)
         recyclerView = findViewById(R.id.recyclerView)
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
 
@@ -74,24 +78,38 @@ class ThirdActivity : AppCompatActivity(), UserAdapter.OnItemClickListener {
                         users.clear()
                     }
                     users.addAll(userList)
-                    adapter.notifyDataSetChanged()
-                    swipeRefreshLayout.isRefreshing = false
+                    if (users[1].first_name == null){
+                        emptyStateTextView.visibility = View.VISIBLE
+                        recyclerView.visibility = View.GONE
+                    }
+                    else {
+                        adapter.notifyDataSetChanged()
+                        swipeRefreshLayout.isRefreshing = false
+
+                    }
                 }
             }
         }).execute(url)
     }
 
-    private fun parseJson(json: String): List<User> {
+    private fun parseJson(json: String?): List<User> {
+        if (json.isNullOrBlank()) {
+            // Handle the case where json is null or empty
+            return emptyList()
+        }
         val gson = Gson()
-        val jsonObject = gson.fromJson(json, JsonObject::class.java)
-
-        // Assuming the key for the user list is "data"
-        val dataArray = jsonObject.getAsJsonArray("data")
-        return gson.fromJson(dataArray, object : TypeToken<List<User>>() {}.type)
+        try {
+            val jsonObject = gson.fromJson(json, JsonObject::class.java)
+            val dataArray = jsonObject.getAsJsonArray("data")
+            return gson.fromJson(dataArray, object : TypeToken<List<User>>() {}.type)
+        } catch (e: JsonParseException) {
+            e.printStackTrace()
+        }
+        // Handle the case where parsing fails
+        return emptyList()
     }
 
     override fun onItemClick(user: User) {
-        // Navigate to SecondActivity and pass the username
         selectedName = "${user.first_name} ${user.last_name}"
         avatar = "${user.avatar}"
         val intent = Intent(this, SecondActivity::class.java)
